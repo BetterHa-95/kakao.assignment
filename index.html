@@ -188,7 +188,7 @@
                 <li><a href="#section5" class="text-gray-600 hover:text-purple-600 transition duration-300">5. 서비스 플로우 다이어그램</a></li>
                 <li><a href="#section6" class="text-gray-600 hover:text-purple-600 transition duration-300">6. 차별적 경험 포인트</a></li>
                 <li><a href="#section7" class="text-gray-600 hover:text-purple-600 transition duration-300">7. 비즈니스 모델과 지표(KPI)</a></li>
-                <li><a href="#section8" class="text-gray-600 hover:text-purple-600 transition duration-300">8. 기대 효과 및 서비스 비전</a></li>
+                <li><a href="#section8" class="text-gray-600 hover:text-purple-600 transition duration-300">8&9. 기대 효과 및 서비스 비전</a></li>
             </ul>
         </div>
         
@@ -336,40 +336,69 @@
             </div>
         </section>
 
-        <!-- 4. 서비스 구조와 기술적 설계 -->
-        <section id="section4" class="report-section">
-            <h2 class="text-3xl font-bold mb-6 text-purple-600">4. 서비스 구조와 기술적 설계</h2>
+        <!-- 4. 서비스 구조와 기술적 설계 (AI Architecture Diagram) - 데이터 플로우 강조 -->
+        <section class="bg-white p-6 md:p-8 rounded-xl shadow-md">
+            <h2 class="text-2xl md:text-3xl font-bold mb-6 border-l-4 border-kakao-yellow pl-3">4. 서비스 구조와 기술 설계 (3 Layer Architecture)</h2>
             
-            <h3 class="text-xl sub-heading mb-4">연동 서비스 (Service Integration)</h3>
-            <div class="flex justify-around items-center mb-10 bg-gray-50 p-4 rounded-lg shadow-inner">
-                <div class="text-center"><span class="block text-4xl mb-1">💬</span> <span class="font-bold">카카오톡</span> (대화, 그룹 네트워크)</div>
-                <div class="text-4xl font-light text-gray-400">🔄</div>
-                <div class="text-center"><span class="block text-4xl mb-1">🗺️</span> <span class="font-bold">카카오맵</span> (위치, 혼잡도, 장소)</div>
+            <!-- Connection Diagram -->
+            <div class="flex justify-around items-center mb-8 text-center">
+                <div class="p-3 rounded-xl bg-kakao-yellow shadow-md">
+                    <p class="font-bold">카카오톡</p>
+                    <p class="text-xs text-gray-700">(대화, 네트워크, 톡캘린더)</p>
+                </div>
+                <!-- SVG Arrow -->
+                <svg class="w-8 h-8 md:w-16 md:h-8" viewBox="0 0 100 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M5 10H95M95 10L85 5M95 10L85 15" stroke="#3C1E1E" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                <div class="p-3 rounded-xl bg-kakao-dark text-white shadow-lg">
+                    <p class="font-bold">Life Finder AI Engine</p>
+                </div>
+                <!-- SVG Arrow -->
+                <svg class="w-8 h-8 md:w-16 md:h-8" viewBox="0 0 100 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M5 10H95M95 10L85 5M95 10L85 15" stroke="#3C1E1E" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                <div class="p-3 rounded-xl bg-blue-100 shadow-md">
+                    <p class="font-bold">카카오맵</p>
+                    <p class="text-xs text-gray-700">(위치, 리뷰, 혼잡도)</p>
+                </div>
             </div>
 
-            <h3 class="text-xl sub-heading mb-8">AI 분석 구조: 3 Layer Framework 시각화</h3>
-            <div class="layer-diagram">
-                <div id="context-layer" class="layer-box text-center">
-                    <p class="text-lg">1. Context Layer</p>
-                    <p class="text-xs">대화 문맥, 키워드, 감정 분석</p>
+            <!-- 3 Layer AI Stack Visualization - 흐름 강조 -->
+            <div class="mt-8">
+                <h3 class="text-xl font-semibold mb-4 text-center">AI 3-Layer 분석 구조</h3>
+                <div class="flex flex-col items-center space-y-1">
+                    
+                    <!-- Input Layer Indicator -->
+                    <div class="text-xs text-gray-500">INPUT DATA: 톡 대화 & 맵 위치</div>
+                    <div class="text-2xl text-gray-400">▼</div>
+
+                    <!-- Layer 1: Context Layer -->
+                    <div class="w-full max-w-lg p-3 rounded-t-xl bg-yellow-50 text-center shadow-inner border-t-4 border-kakao-dark/50">
+                        <p class="font-semibold text-base text-kakao-dark">1. Context Layer (맥락 분석)</p>
+                        <p class="text-xs text-gray-600">대화 내용 · 키워드 · 감정 분석 (LLM 기반)</p>
+                    </div>
+                    <div class="text-xl text-kakao-yellow font-bold">→ PROCESS →</div>
+
+                    <!-- Layer 2: Environment Layer -->
+                    <div class="w-full max-w-lg p-3 bg-yellow-100 text-center shadow-md border-x-4 border-kakao-yellow">
+                        <p class="font-bold text-lg text-kakao-dark">2. Environment Layer (상황 반영)</p>
+                        <p class="text-sm text-gray-700">위치 · 날씨 · 혼잡도 반영 (Contextual Filtering)</p>
+                    </div>
+                    <div class="text-xl text-kakao-yellow font-bold">→ REFINE →</div>
+
+                    <!-- Layer 3: Preference Layer -->
+                    <div class="w-full max-w-lg p-3 rounded-b-xl bg-yellow-200 text-center shadow-lg border-b-4 border-kakao-dark">
+                        <p class="font-extrabold text-xl text-kakao-dark">3. Preference Layer (취향 학습)</p>
+                        <p class="text-sm text-gray-800">개인 검색 기록 · 행동 패턴 기반 취향 학습 (CF + RL)</p>
+                    </div>
+
+                    <!-- Output Layer Indicator -->
+                    <div class="text-2xl text-gray-400">▼</div>
+                    <div class="text-xs text-gray-500">OUTPUT: 최적화된 추천 후보 리스트</div>
                 </div>
-                <div id="environment-layer" class="layer-box text-center">
-                    <p class="text-lg">2. Environment Layer</p>
-                    <p class="text-xs">위치, 날씨, 혼잡도 반영</p>
-                </div>
-                <div id="preference-layer" class="layer-box text-center">
-                    <p class="text-lg">3. Preference Layer</p>
-                    <p class="text-xs">개인 기록, 행동 패턴 학습</p>
-                </div>
-                <div id="ai-engine" class="layer-box text-center shadow-2xl">
-                    AI 엔진
-                </div>
+                <p class="text-sm text-center text-gray-500 mt-4">👉 **분석 엔진:** LLM, 콘텐츠/협업 필터링, 강화학습(RL) 결합</p>
             </div>
-            <p class="text-center text-sm text-gray-600 mt-4">
-                <span class="font-bold">분석 엔진:</span> LLM 기반 대화 이해 모델 + 하이브리드 추천 알고리즘 (콘텐츠/협업/강화학습)
-            </p>
         </section>
-
         <!-- 5. 서비스 플로우 다이어그램 -->
         <section id="section5" class="report-section">
             <h2 class="text-3xl font-bold mb-6 text-purple-600">5. 서비스 플로우 다이어그램</h2>
@@ -490,7 +519,7 @@
 
         <!-- 8 & 9. 기대 효과 및 서비스 비전 -->
         <section id="section8" class="report-section">
-            <h2 class="text-3xl font-bold mb-6 text-purple-600">8. 기대 효과 및 9. 서비스 비전</h2>
+            <h2 class="text-3xl font-bold mb-6 text-purple-600">8&9. 기대 효과 및 서비스 비전</h2>
 
             <h3 class="text-xl sub-heading mb-4">기대 효과 (Expected Outcomes)</h3>
             <div class="grid grid-cols-3 gap-4 mb-10">
