@@ -1,0 +1,659 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>카카오 라이프 파인더 비주얼 기획안</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;700;900&display=swap');
+        
+        body {
+            font-family: 'Noto Sans KR', sans-serif;
+            color: #262626;
+            background-color: #f5f5f7;
+            line-height: 1.6;
+        }
+        
+        h1, h2, h3, h4 {
+            font-family: 'Noto Sans KR', sans-serif;
+            font-weight: 700;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 2rem 1.5rem;
+        }
+        
+        .report-section {
+            background-color: #ffffff;
+            padding: 3rem 4rem;
+            margin-bottom: 2rem;
+            border-radius: 1rem;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
+        }
+
+        .cover-page {
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            background: linear-gradient(135deg, #f0f0f5 0%, #ffffff 100%);
+            border-bottom: 12px solid #fee500;
+        }
+
+        .main-title {
+            color: #1a1a1a;
+        }
+
+        .sub-heading {
+            border-left: 4px solid #6c5ce7;
+            padding-left: 0.75rem;
+            font-weight: 700;
+            color: #4a4a4a;
+        }
+        
+        .gradient-text {
+            background: linear-gradient(90deg, #6c5ce7, #8e44ad);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .flow-node {
+            background-color: #fff;
+            border: 2px solid #6c5ce7;
+            padding: 1.5rem 1rem;
+            border-radius: 0.75rem;
+            transition: all 0.3s;
+            box-shadow: 0 4px 6px rgba(108, 92, 231, 0.2);
+        }
+
+        .flow-arrow {
+            color: #6c5ce7;
+            font-size: 2rem;
+            font-weight: 900;
+            margin: 0 10px;
+        }
+
+        /* 3 Layer Diagram CSS */
+        .layer-diagram {
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 300px;
+        }
+        .layer-box {
+            position: absolute;
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            font-weight: 700;
+            opacity: 0.95;
+            transition: all 0.5s;
+        }
+        #context-layer { background-color: #6c5ce7; z-index: 3; width: 260px; height: 260px; }
+        #environment-layer { background-color: #8e44ad; z-index: 2; width: 220px; height: 220px; }
+        #preference-layer { background-color: #34495e; z-index: 1; width: 180px; height: 180px; }
+        #ai-engine { background-color: #fee500; color: #191919; z-index: 4; width: 100px; height: 100px; font-size: 1.1rem; }
+        
+        .ai-loading-dots {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 1.5rem;
+        }
+        .dot {
+            width: 8px;
+            height: 8px;
+            margin: 0 4px;
+            background-color: #8e44ad;
+            border-radius: 50%;
+            animation: bounce 1.4s infinite ease-in-out both;
+        }
+        .dot:nth-child(1) { animation-delay: -0.32s; }
+        .dot:nth-child(2) { animation-delay: -0.16s; }
+        @keyframes bounce {
+            0%, 80%, 100% { transform: scale(0); }
+            40% { transform: scale(1.0); }
+        }
+
+        .kpi-gauge {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            background: conic-gradient(#fee500 0%, #fee500 70%, #e0e0e0 70%, #e0e0e0 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+        .kpi-gauge::after {
+            content: '';
+            position: absolute;
+            width: 80px;
+            height: 80px;
+            background: white;
+            border-radius: 50%;
+        }
+        .kpi-value {
+            z-index: 10;
+            font-weight: 700;
+            font-size: 1.2rem;
+            color: #6c5ce7;
+        }
+
+    </style>
+</head>
+<body class="bg-gray-100 text-gray-800">
+
+    <!-- 1. 표지 (Cover Page) -->
+    <div class="cover-page p-8">
+        <div class="max-w-4xl">
+            <h1 class="text-6xl md:text-8xl font-black mb-6 tracking-tight main-title">
+                Kakao Life Finder
+            </h1>
+            <h2 class="text-3xl md:text-5xl font-extrabold mb-10 gradient-text">
+                카카오 AI 서비스 기획안
+            </h2>
+            <p class="text-2xl font-semibold mb-20 text-gray-700">
+                “결정 피로를 넘어, 취향의 발견으로”
+            </p>
+            <div class="text-xl text-gray-500 space-y-2">
+                <p>지원 분야: Service & Business – AI 서비스 기획</p>
+            </div>
+            <a href="#toc" class="bg-yellow-400 text-gray-900 font-bold py-3 px-8 rounded-full shadow-xl hover:bg-yellow-500 transition duration-300 inline-block mt-16">
+                보고서 목차 보기
+            </a>
+        </div>
+    </div>
+
+    <div class="container">
+        <!-- 2. 목차 (Table of Contents) -->
+        <div id="toc" class="report-section mb-12 border-l-8 border-yellow-400">
+            <h2 class="text-3xl font-bold mb-8 text-gray-800 pb-2">목차 (Table of Contents)</h2>
+            <ul class="list-none pl-0 grid grid-cols-1 md:grid-cols-2 gap-4 text-lg font-medium">
+                <li><a href="#section1" class="text-gray-600 hover:text-purple-600 transition duration-300">1. 제안 배경과 트렌드 인사이트</a></li>
+                <li><a href="#section2" class="text-gray-600 hover:text-purple-600 transition duration-300">2. 문제 정의와 핵심 가치</a></li>
+                <li><a href="#section3" class="text-gray-600 hover:text-purple-600 transition duration-300">3. 사용자 시나리오 (스토리보드)</a></li>
+                <li><a href="#section4" class="text-gray-600 hover:text-purple-600 transition duration-300">4. 서비스 구조와 기술적 설계</a></li>
+                <li><a href="#section5" class="text-gray-600 hover:text-purple-600 transition duration-300">5. 서비스 플로우 다이어그램</a></li>
+                <li><a href="#section6" class="text-gray-600 hover:text-purple-600 transition duration-300">6. 차별적 경험 포인트</a></li>
+                <li><a href="#section7" class="text-gray-600 hover:text-purple-600 transition duration-300">7. 비즈니스 모델과 지표(KPI)</a></li>
+                <li><a href="#section8" class="text-gray-600 hover:text-purple-600 transition duration-300">8. 기대 효과 및 서비스 비전</a></li>
+            </ul>
+        </div>
+        
+        <!-- 1. 제안 배경과 트렌드 인사이트 -->
+        <section id="section1" class="report-section">
+            <h2 class="text-3xl font-bold mb-6 text-purple-600">1. 제안 배경과 트렌드 인사이트</h2>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-10">
+                <!-- 결정 피로 정의 -->
+                <div class="p-6 bg-red-50 rounded-lg border-t-4 border-red-500">
+                    <h3 class="text-xl font-bold mb-3 text-red-700">📌 문제 정의: 결정 피로 (Decision Fatigue)</h3>
+                    <p class="text-gray-700">
+                        요즘 사람들은 "오늘 뭐하지?" 같은 작은 결정에도 <span class="font-bold">피로</span>를 느낍니다. 정보는 넘쳐나지만, 선택 과정이 복잡하고 시간이 오래 걸려 <span class="font-bold">선택 자체를 미루게</span> 되는 현상입니다.
+                    </p>
+                </div>
+                <!-- 서비스 비전 -->
+                <div class="p-6 bg-indigo-50 rounded-lg border-t-4 border-indigo-500">
+                    <h3 class="text-xl font-bold mb-3 text-indigo-700">💡 카카오 라이프 파인더의 역할</h3>
+                    <p class="text-gray-700">
+                        카카오톡과 카카오맵 데이터를 AI로 분석하여, 사용자가 묻기도 전에 <span class="font-bold">상황에 맞는 선택을 먼저 제안</span>하는 **선제적·맥락적 제안** 서비스입니다.
+                    </p>
+                </div>
+            </div>
+
+            <h3 class="text-xl sub-heading mb-6">최근 소비자 트렌드 시각화</h3>
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-6 text-center">
+                <div class="p-4 rounded-xl bg-gray-50 border border-gray-200 hover:shadow-lg transition">
+                    <div class="text-4xl mb-2">🗓️</div>
+                    <h4 class="font-bold text-lg text-gray-800">아보하 (아주 보통의 하루)</h4>
+                    <p class="text-sm text-gray-600">일상의 평범함을 특별하게 소비하려는 욕구</p>
+                </div>
+                <div class="p-4 rounded-xl bg-gray-50 border border-gray-200 hover:shadow-lg transition">
+                    <div class="text-4xl mb-2">🎁</div>
+                    <h4 class="font-bold text-lg text-gray-800">토핑 경제 (개인 맞춤)</h4>
+                    <p class="text-sm text-gray-600">내 취향에 꼭 맞춘 작고 세밀한 맞춤형 소비 선호</p>
+                </div>
+                <div class="p-4 rounded-xl bg-gray-50 border border-gray-200 hover:shadow-lg transition">
+                    <div class="text-4xl mb-2">😌</div>
+                    <h4 class="font-bold text-lg text-gray-800">무해력 경험</h4>
+                    <p class="text-sm text-gray-600">부담 없으면서도 기분 좋은 소소하고 확실한 즐거움</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- 2. 문제 정의와 핵심 가치 -->
+        <section id="section2" class="report-section">
+            <h2 class="text-3xl font-bold mb-6 text-purple-600">2. 문제 정의와 핵심 가치</h2>
+            
+            <h3 class="text-xl sub-heading mb-4">핵심 문제 (Problem Statement)</h3>
+            <ul class="list-disc ml-6 mb-8 text-gray-700 space-y-1">
+                <li>단체 대화방에서 약속 조율에 많은 시간과 에너지 소모.</li>
+                <li>카카오맵 내에서 원하는 장소 탐색을 위한 반복적인 검색 피로.</li>
+                <li>결국, <span class="font-bold text-red-600">피로감 때문에 선택 자체를 미루는 현상</span> 발생.</li>
+            </ul>
+
+            <h3 class="text-xl sub-heading mb-4">핵심 가치 제안 (Value Proposition) 시각화</h3>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 text-center">
+                <div class="p-6 bg-purple-100 rounded-xl shadow-md border-b-4 border-purple-500">
+                    <div class="text-4xl mb-2">🧭</div>
+                    <h4 class="font-bold text-lg mb-1">취향 발견</h4>
+                    <p class="text-sm text-gray-600">사용자가 몰랐던 관심사까지 찾아서 제안</p>
+                </div>
+                <div class="p-6 bg-purple-100 rounded-xl shadow-md border-b-4 border-purple-500">
+                    <div class="text-4xl mb-2">🤝</div>
+                    <h4 class="font-bold text-lg mb-1">소셜 합의</h4>
+                    <p class="text-sm text-gray-600">여러 사람의 의견을 AI가 조율해 최적의 선택 제공</p>
+                </div>
+                <div class="p-6 bg-purple-100 rounded-xl shadow-md border-b-4 border-purple-500">
+                    <div class="text-4xl mb-2">💖</div>
+                    <h4 class="font-bold text-lg mb-1">감정 공감</h4>
+                    <p class="text-sm text-gray-600">날씨·대화 분위기 반영 "내 마음을 읽는 듯한" 추천</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- 3. 사용자 시나리오 (스토리보드) -->
+        <section id="section3" class="report-section">
+            <h2 class="text-3xl font-bold mb-6 text-purple-600">3. 사용자 시나리오 (스토리보드)</h2>
+            <p class="text-gray-700 mb-8">핵심 가치에 기반한 세 가지 대표 사용자 경험 시나리오입니다.</p>
+
+            <!-- Scenario 1: 단톡방 합의 지원 (LLM Demo Integrated) -->
+            <div class="mb-8 p-6 bg-yellow-50 rounded-xl border-l-4 border-yellow-400">
+                <h3 class="text-xl font-bold mb-3 text-gray-800">① 단톡방 합의 지원 (소셜 합의)</h3>
+                <p class="text-sm text-gray-600 mb-4">
+                    <span class="font-bold">상황:</span> 친구 A(전시회), B(피크닉), C(맛집)의 의견이 오가는 모임 대화방.
+                </p>
+
+                <div class="flex justify-center flex-col items-center">
+                    <div class="w-full md:w-3/5 border-8 border-gray-900 rounded-3xl overflow-hidden shadow-2xl relative bg-gray-50">
+                        <!-- Chat Mockup -->
+                        <div class="p-3 bg-gray-200 text-center font-bold text-sm">주말 모임 💬</div>
+                        <div class="p-4 space-y-3 bg-gray-300 h-64 overflow-y-auto">
+                            <div class="flex justify-end"><div class="bg-yellow-200 p-2 rounded-lg rounded-br-none max-w-xs text-sm">주말에 전시회 보러 갈까?</div></div>
+                            <div class="flex justify-start"><div class="bg-white p-2 rounded-lg rounded-bl-none max-w-xs text-sm">한강 피크닉 일정 추가! 🧺</div></div>
+                            <div class="flex justify-end"><div class="bg-yellow-200 p-2 rounded-lg rounded-br-none max-w-xs text-sm">힙지로 맛집 가고 싶은데... 🥩</div></div>
+                            
+                            <!-- AI Suggestion Container -->
+                            <div class="flex flex-col items-center mt-4">
+                                <button id="propose-btn-visual" class="bg-purple-600 text-white font-bold py-2 px-6 rounded-full shadow-lg hover:bg-purple-700 transition duration-200 text-sm mb-3">
+                                    ✨ AI 코스 제안 받기 (클릭)
+                                </button>
+                                <div id="propose-response-container-visual" class="w-full flex justify-start hidden">
+                                    <div class="bg-indigo-100 text-indigo-800 p-3 rounded-xl max-w-sm shadow-md">
+                                        <p class="text-xs font-bold mb-1">카카오 Life Finder AI 제안:</p>
+                                        <div id="propose-response-text-visual" class="text-sm font-medium"></div>
+                                        <div id="propose-response-loading-visual" class="hidden ai-loading-dots mt-3">
+                                            <div class="dot"></div><div class="dot"></div><div class="dot"></div>
+                                        </div>
+                                        <button class="w-full bg-indigo-500 text-white text-xs py-1 mt-2 rounded-md hover:bg-indigo-600">바로 예약/길찾기 연결 &rarr;</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <p class="text-sm text-gray-700 mt-4 text-center">
+                    <span class="font-bold">효과:</span> 사용자들은 고민 없는 합의와 빠른 일정 확정을 경험합니다.
+                </p>
+            </div>
+
+            <!-- Scenario 2 & 3 -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-8">
+                <div class="p-5 bg-gray-100 rounded-xl border border-gray-200">
+                    <h3 class="text-xl font-bold mb-3 text-gray-800">② 개인 취향 지도 (취향 발견)</h3>
+                    <div class="flex items-start space-x-3">
+                        <div class="text-4xl text-purple-600">🗺️</div>
+                        <div>
+                            <p class="text-sm text-gray-600 mb-2"><span class="font-bold">상황:</span> '북촌 찻집' 검색 반복</p>
+                            <p class="text-sm font-medium text-gray-700">AI 제안: "북촌 다도 카페 5곳 추천", "차 애호가 모임 연결" 푸시</p>
+                            <p class="text-xs text-green-600 mt-1">효과: 취향 확장 및 커뮤니티 참여 확대</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="p-5 bg-gray-100 rounded-xl border border-gray-200">
+                    <h3 class="text-xl font-bold mb-3 text-gray-800">③ 감정 기반 제안 (감정 공감)</h3>
+                    <div class="flex items-start space-x-3">
+                        <div class="text-4xl text-purple-600">☔</div>
+                        <div>
+                            <p class="text-sm text-gray-600 mb-2"><span class="font-bold">상황:</span> 퇴근길, 비 오는 저녁</p>
+                            <p class="text-sm font-medium text-gray-700">AI 제안: "따뜻한 칵테일 🍸 근처 카페 예약해드릴까요?"</p>
+                            <p class="text-xs text-green-600 mt-1">효과: 감성적 공감 및 즉각적인 위로 제공</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 4. 서비스 구조와 기술적 설계 -->
+        <section id="section4" class="report-section">
+            <h2 class="text-3xl font-bold mb-6 text-purple-600">4. 서비스 구조와 기술적 설계</h2>
+            
+            <h3 class="text-xl sub-heading mb-4">연동 서비스 (Service Integration)</h3>
+            <div class="flex justify-around items-center mb-10 bg-gray-50 p-4 rounded-lg shadow-inner">
+                <div class="text-center"><span class="block text-4xl mb-1">💬</span> <span class="font-bold">카카오톡</span> (대화, 그룹 네트워크)</div>
+                <div class="text-4xl font-light text-gray-400">🔄</div>
+                <div class="text-center"><span class="block text-4xl mb-1">🗺️</span> <span class="font-bold">카카오맵</span> (위치, 혼잡도, 장소)</div>
+            </div>
+
+            <h3 class="text-xl sub-heading mb-8">AI 분석 구조: 3 Layer Framework 시각화</h3>
+            <div class="layer-diagram">
+                <div id="context-layer" class="layer-box text-center">
+                    <p class="text-lg">1. Context Layer</p>
+                    <p class="text-xs">대화 문맥, 키워드, 감정 분석</p>
+                </div>
+                <div id="environment-layer" class="layer-box text-center">
+                    <p class="text-lg">2. Environment Layer</p>
+                    <p class="text-xs">위치, 날씨, 혼잡도 반영</p>
+                </div>
+                <div id="preference-layer" class="layer-box text-center">
+                    <p class="text-lg">3. Preference Layer</p>
+                    <p class="text-xs">개인 기록, 행동 패턴 학습</p>
+                </div>
+                <div id="ai-engine" class="layer-box text-center shadow-2xl">
+                    AI 엔진
+                </div>
+            </div>
+            <p class="text-center text-sm text-gray-600 mt-4">
+                <span class="font-bold">분석 엔진:</span> LLM 기반 대화 이해 모델 + 하이브리드 추천 알고리즘 (콘텐츠/협업/강화학습)
+            </p>
+        </section>
+
+        <!-- 5. 서비스 플로우 다이어그램 -->
+        <section id="section5" class="report-section">
+            <h2 class="text-3xl font-bold mb-6 text-purple-600">5. 서비스 플로우 다이어그램</h2>
+            
+            <div class="flex flex-wrap justify-between items-center text-sm md:space-x-2 space-y-4 md:space-y-0">
+                <div class="flow-node w-full md:w-auto flex-1 bg-yellow-100">
+                    <p class="font-bold">1. 사용자 입력 발생</p>
+                    <p class="text-xs mt-1">대화/검색</p>
+                </div>
+                <div class="flow-arrow hidden md:block">→</div>
+                <div class="flow-node w-full md:w-auto flex-1">
+                    <p class="font-bold">2. AI 맥락 분석</p>
+                    <p class="text-xs mt-1">3 Layer 적용</p>
+                </div>
+                <div class="flow-arrow hidden md:block">→</div>
+                <div class="flow-node w-full md:w-auto flex-1">
+                    <p class="font-bold">3. 최적화 추천</p>
+                    <p class="text-xs mt-1">후보 리스트 생성</p>
+                </div>
+                <div class="flow-arrow hidden md:block">→</div>
+                <div class="flow-node w-full md:w-auto flex-1 bg-purple-100">
+                    <p class="font-bold">4. 카드형 제안</p>
+                    <p class="text-xs mt-1">카카오톡/채널 푸시</p>
+                </div>
+                <div class="flow-arrow hidden md:block">→</div>
+                <div class="flow-node w-full md:w-auto flex-1 bg-green-100 border-green-500">
+                    <p class="font-bold">5. 경험 & 기록</p>
+                    <p class="text-xs mt-1">길찾기/예약 및 취향 지도 업데이트</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- 6. 차별적 경험 포인트 -->
+        <section id="section6" class="report-section">
+            <h2 class="text-3xl font-bold mb-6 text-purple-600">6. 차별적 경험 포인트</h2>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8 text-center">
+                <div class="p-6 bg-gray-100 rounded-xl shadow-md border-b-4 border-yellow-400">
+                    <div class="text-4xl mb-2">🧠</div>
+                    <h4 class="font-bold text-lg">마음을 읽는 듯한 추천</h4>
+                    <p class="text-sm text-gray-600">기분, 날씨, 상황까지 종합 반영</p>
+                </div>
+                <div class="p-6 bg-gray-100 rounded-xl shadow-md border-b-4 border-yellow-400">
+                    <div class="text-4xl mb-2">🖼️</div>
+                    <h4 class="font-bold text-lg">나만의 취향 지도</h4>
+                    <p class="text-sm text-gray-600">시간이 지날수록 개인 맞춤형 라이프맵 완성</p>
+                </div>
+                <div class="p-6 bg-gray-100 rounded-xl shadow-md border-b-4 border-yellow-400">
+                    <div class="text-4xl mb-2">✅</div>
+                    <h4 class="font-bold text-lg">고민 없는 합의</h4>
+                    <p class="text-sm text-gray-600">AI가 대화 맥락에서 그룹 결정을 즉시 지원</p>
+                </div>
+            </div>
+
+            <!-- AI 비전 이미지 생성 기능 (Imagen 3.0 Integrated) -->
+            <div class="p-6 bg-indigo-50 rounded-xl border border-indigo-200 text-center">
+                <h3 class="text-xl font-bold mb-4 gradient-text">✨ 서비스 비전 시각화: AI 이미지 생성</h3>
+                <p class="text-sm text-gray-600 mb-4 text-center">
+                    Life Finder의 '결정 피로 해소'와 '취향 발견' 가치를 하나의 이미지로 표현합니다.
+                </p>
+                <div id="image-container-visual" class="w-full h-64 bg-gray-200 rounded-lg flex items-center justify-center overflow-hidden mb-4 shadow-inner">
+                    <span id="loading-indicator-visual" class="hidden text-gray-500 font-medium">이미지 생성 중...</span>
+                </div>
+                <button id="generate-image-btn-visual" class="bg-indigo-600 text-white font-bold py-2 px-6 rounded-full shadow-lg hover:bg-indigo-700 transition duration-200 w-full md:w-auto">
+                    AI 비전 이미지 생성하기 (클릭)
+                </button>
+            </div>
+        </section>
+
+        <!-- 7. 비즈니스 모델과 지표(KPI) -->
+        <section id="section7" class="report-section">
+            <h2 class="text-3xl font-bold mb-6 text-purple-600">7. 비즈니스 모델과 지표(KPI)</h2>
+            
+            <h3 class="text-xl sub-heading mb-4">비즈니스 모델 (BM) Matrix</h3>
+            <div class="grid grid-cols-2 gap-4 mb-10">
+                <div class="p-4 bg-gray-100 rounded-lg border border-gray-200">
+                    <h4 class="font-bold text-lg text-purple-600">수수료 기반</h4>
+                    <p class="text-sm text-gray-700">제휴 장소 예약·체험 수수료 (5~10%)</p>
+                </div>
+                <div class="p-4 bg-gray-100 rounded-lg border border-gray-200">
+                    <h4 class="font-bold text-lg text-purple-600">콘텐츠 기반</h4>
+                    <p class="text-sm text-gray-700">브랜드 협업 패키지 (IP 활용 코스)</p>
+                </div>
+                <div class="p-4 bg-gray-100 rounded-lg border border-gray-200">
+                    <h4 class="font-bold text-lg text-purple-600">구독 기반</h4>
+                    <p class="text-sm text-gray-700">프리미엄 멤버십 (독점 추천, 광고 없음)</p>
+                </div>
+                <div class="p-4 bg-gray-100 rounded-lg border border-gray-200">
+                    <h4 class="font-bold text-lg text-purple-600">데이터 기반</h4>
+                    <p class="text-sm text-gray-700">취향 데이터 리포트 제공 (익명화된 인사이트)</p>
+                </div>
+            </div>
+
+            <h3 class="text-xl sub-heading mb-6">핵심 성과 지표 (KPI) 시각화</h3>
+            <div class="flex justify-around items-center text-center">
+                <div>
+                    <div class="kpi-gauge mb-2 mx-auto" style="background: conic-gradient(#fee500 0%, #fee500 80%, #e0e0e0 80%, #e0e0e0 100%);">
+                        <span class="kpi-value">80%</span>
+                    </div>
+                    <p class="text-sm font-medium">기능 채택률 목표</p>
+                </div>
+                <div>
+                    <div class="kpi-gauge mb-2 mx-auto" style="background: conic-gradient(#fee500 0%, #fee500 70%, #e0e0e0 70%, #e0e0e0 100%);">
+                        <span class="kpi-value">70%</span>
+                    </div>
+                    <p class="text-sm font-medium">예약 전환율 목표</p>
+                </div>
+                <div>
+                    <div class="text-4xl font-bold text-purple-600 mb-2">↑↑↑</div>
+                    <p class="text-sm font-medium">월간 추천 사용량</p>
+                </div>
+                <div>
+                    <div class="text-4xl font-bold text-green-600 mb-2">↓↓↓</div>
+                    <p class="text-sm font-medium">이탈률 감소 (Churn)</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- 8 & 9. 기대 효과 및 서비스 비전 -->
+        <section id="section8" class="report-section">
+            <h2 class="text-3xl font-bold mb-6 text-purple-600">8. 기대 효과 및 9. 서비스 비전</h2>
+
+            <h3 class="text-xl sub-heading mb-4">기대 효과 (Expected Outcomes)</h3>
+            <div class="grid grid-cols-3 gap-4 mb-10">
+                <div class="p-4 bg-yellow-100 rounded-lg text-center"><span class="text-2xl block mb-1">👤</span><p class="font-bold">사용자</p><p class="text-xs">선택 피로 감소, 취향 발견</p></div>
+                <div class="p-4 bg-yellow-100 rounded-lg text-center"><span class="text-2xl block mb-1">💼</span><p class="font-bold">파트너</p><p class="text-xs">안정적 고객 유입, 매출 증대</p></div>
+                <div class="p-4 bg-yellow-100 rounded-lg text-center"><span class="text-2xl block mb-1">🏢</span><p class="font-bold">카카오</p><p class="text-xs">생태계 확장, AI 비서 포지셔닝</p></div>
+            </div>
+
+            <h3 class="text-xl sub-heading mb-6">서비스 비전 (Service Vision)</h3>
+            <div class="p-8 bg-indigo-600 text-white rounded-xl text-center shadow-2xl">
+                <p class="text-2xl md:text-4xl font-semibold mb-4">
+                    “카카오 라이프 파인더는
+                </p>
+                <div class="text-5xl md:text-7xl font-extrabold leading-tight tracking-tighter">
+                    <span class="text-yellow-400">‘내일의 취향을 발견하는 경험’</span>
+                </div>
+                <p class="text-2xl md:text-4xl font-semibold mt-4">
+                    으로 일상을 바꾼다.
+                </p>
+                <p class="mt-6 text-lg font-light text-indigo-200">
+                    카카오톡의 소셜 데이터와 카카오맵의 공간 데이터를 결합해, 새로운 소비 습관과 문화를 만들어가는 서비스로 성장할 것입니다.
+                </p>
+            </div>
+        </section>
+
+    </div>
+
+    <script>
+        const API_KEY = ""; // Canvas 환경에서 자동 제공됩니다.
+
+        // ==== LLM Proposal Generation (Scenario 1 Demo) ====
+        document.getElementById('propose-btn-visual').addEventListener('click', async () => {
+            const responseContainer = document.getElementById('propose-response-container-visual');
+            const responseText = document.getElementById('propose-response-text-visual');
+            const loadingIndicator = document.getElementById('propose-response-loading-visual');
+
+            responseContainer.classList.remove('hidden');
+            responseText.innerHTML = '';
+            loadingIndicator.classList.remove('hidden');
+            
+            const button = document.getElementById('propose-btn-visual');
+            button.disabled = true;
+
+            const userPrompt = "친구 A는 전시회 검색, 친구 B는 피크닉 일정 추가, 친구 C는 힙지로 맛집 언급. 이 세 가지 관심사를 종합해서 가장 완벽한 주말 코스를 만들어줘. 30단어 이내로 간결하게.";
+            const systemPrompt = "카카오 Life Finder AI 챗봇 역할을 맡아. 사용자의 대화 내용을 분석하고, '소셜 합의'를 목표로 세 가지 관심사(맛집, 활동, 문화)를 포함하는 최적의 주말 코스를 이모지를 섞어 한 문장으로 제안해줘. 답변은 50단어 이내로 간결하고 매력적으로 작성해줘.";
+            
+            const payload = {
+                contents: [{ parts: [{ text: userPrompt }] }],
+                systemInstruction: { parts: [{ text: systemPrompt }] },
+            };
+            
+            const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-05-20:generateContent?key=${API_KEY}`;
+            
+            const maxRetries = 3;
+            let retries = 0;
+            let success = false;
+            
+            while (retries < maxRetries && !success) {
+                try {
+                    const response = await fetch(apiUrl, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(payload)
+                    });
+
+                    if (!response.ok) {
+                        throw new Error(`API call failed with status: ${response.status}`);
+                    }
+
+                    const result = await response.json();
+                    const text = result?.candidates?.[0]?.content?.parts?.[0]?.text;
+                    
+                    if (text) {
+                        responseText.innerHTML = text;
+                        success = true;
+                    } else {
+                        throw new Error("No text data received from API.");
+                    }
+
+                } catch (error) {
+                    console.error("LLM call failed on retry attempt", retries + 1, ":", error);
+                    retries++;
+                    if (retries < maxRetries) {
+                        const delay = Math.pow(2, retries) * 1000;
+                        await new Promise(resolve => setTimeout(resolve, delay));
+                    } else {
+                        responseText.innerHTML = `<span class="text-red-500">제안 생성에 실패했습니다. (API 오류)</span>`;
+                    }
+                }
+            }
+
+            loadingIndicator.classList.add('hidden');
+            button.disabled = false;
+        });
+
+
+        // ==== Image Generation (Vision Demo) ====
+        document.getElementById('generate-image-btn-visual').addEventListener('click', async () => {
+            const container = document.getElementById('image-container-visual');
+            const loadingIndicator = document.getElementById('loading-indicator-visual');
+            const button = document.getElementById('generate-image-btn-visual');
+            
+            // Show loading state
+            container.innerHTML = '';
+            loadingIndicator.classList.remove('hidden');
+            button.disabled = true;
+            button.innerHTML = '이미지 생성 중...';
+
+            const prompt = "AI가 한국인들의 일상 속 결정 피로를 해소하고, 작은 행복과 개인의 취향을 발견하도록 돕는 모습을 시각화한 이미지. 카카오톡과 카카오맵의 아이콘이 연결된 추상적인 디자인, 부드러운 파스텔톤, 따뜻하고 감성적인 분위기, 미니멀하고 깨끗한 3D 디자인. 픽사 스타일.";
+            
+            const maxRetries = 3;
+            let retries = 0;
+            let success = false;
+            
+            while (retries < maxRetries && !success) {
+                try {
+                    const payload = { instances: { prompt: prompt }, parameters: { "sampleCount": 1} };
+                    const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/imagen-3.0-generate-002:predict?key=${API_KEY}`;
+                    
+                    const response = await fetch(apiUrl, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(payload)
+                    });
+
+                    if (!response.ok) {
+                        throw new Error(`API call failed with status: ${response.status}`);
+                    }
+
+                    const result = await response.json();
+                    const base64Data = result?.predictions?.[0]?.bytesBase64Encoded;
+
+                    if (!base64Data) {
+                        throw new Error("No image data received from API.");
+                    }
+
+                    const imageUrl = `data:image/png;base64,${base64Data}`;
+                    const imgElement = document.createElement('img');
+                    imgElement.src = imageUrl;
+                    imgElement.alt = "AI가 생성한 라이프 파인더 비전 이미지";
+                    imgElement.className = "w-full h-full object-cover rounded-lg";
+                    
+                    container.innerHTML = '';
+                    container.appendChild(imgElement);
+                    success = true;
+
+                } catch (error) {
+                    console.error("Image generation failed on retry attempt", retries + 1, ":", error);
+                    retries++;
+                    if (retries < maxRetries) {
+                        const delay = Math.pow(2, retries) * 1000;
+                        await new Promise(resolve => setTimeout(resolve, delay));
+                    } else {
+                        container.innerHTML = `<span class="text-red-500 text-center">이미지 생성에 실패했습니다.<br>(${error.message})</span>`;
+                    }
+                }
+            }
+            
+            loadingIndicator.classList.add('hidden');
+            button.disabled = false;
+            button.innerHTML = 'AI 비전 이미지 생성하기 (클릭)';
+        });
+
+    </script>
+</body>
+</html>
